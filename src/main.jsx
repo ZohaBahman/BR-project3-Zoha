@@ -13,3 +13,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 console.log(import.meta.env.VITE_SPOONACULAR_API_KEY)
+
