@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import RecipeCard from '../components/RecipeCard'
 
+
 function Home() {
     const [recipes, setRecipes] = useState([])
     const [loading, setLoading] = useState(true)
@@ -9,29 +10,58 @@ function Home() {
     const [cuisine, setCuisine] = useState('')
     const [diet, setDiet] = useState('')
 
-    useEffect(() => {
-        const fetchRecipes = async () => {
-            try {
-                setLoading(true)
-                const API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY
+    const [favorites, setFavorites] = useState(() => {
+        const saved = localStorage.getItem('favorites')
+        return saved ? JSON.parse(saved) : []
+    })
 
-                const response = await fetch(
-                    `https://api.spoonacular.com/recipes/complexSearch?number=10&query=${search}&cuisine=${cuisine}&diet=${diet}&apiKey=${API_KEY}`
-                )
 
-                const data = await response.json()
-                setRecipes(data.results)
-            } catch (error) {
-                console.error('Error fetching recipes:', error)
-            } finally {
-                setLoading(false)
-            }
+
+    const toggleFavorite = (recipe) => {
+        const exists = favorites.find((item) => item.id === recipe.id)
+
+        let updated
+        if (exists) {
+            updated = favorites.filter((item) => item.id !== recipe.id)
+        } else {
+            updated = [...favorites, recipe]
         }
 
-        fetchRecipes()
+        setFavorites(updated)
+        localStorage.setItem('favorites', JSON.stringify(updated))
+    }
+
+
+
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            const fetchRecipes = async () => {
+                try {
+                    setLoading(true)
+                    const API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY
+
+                    const response = await fetch(
+                        `https://api.spoonacular.com/recipes/complexSearch?number=10&query=${search}&cuisine=${cuisine}&diet=${diet}&apiKey=${API_KEY}`
+                    )
+
+                    const data = await response.json()
+                    setRecipes(data.results)
+                } catch (error) {
+                    console.error('Error fetching recipes:', error)
+                } finally {
+                    setLoading(false)
+                }
+            }
+
+            fetchRecipes()
+        }, 400)
+
+        return () => clearTimeout(timeout)
     }, [search, cuisine, diet])
 
-    if (loading) return <p>Loading recipes...</p>
+
+
 
     return (
         <div>
@@ -63,9 +93,17 @@ function Home() {
             </div>
 
             <div className="recipe-list">
-                {recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
-                ))}
+                {loading && <p>Loading recipes...</p>}
+
+                {!loading &&
+                    recipes.map((recipe) => (
+                        <RecipeCard
+                            key={recipe.id}
+                            recipe={recipe}
+                            onToggleFavorite={toggleFavorite}
+                            isFavorite={favorites.some((f) => f.id === recipe.id)}
+                        />
+                    ))}
             </div>
         </div>
     )
