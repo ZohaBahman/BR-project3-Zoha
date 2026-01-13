@@ -15,6 +15,9 @@ function Home() {
         return saved ? JSON.parse(saved) : []
     })
 
+    const [page, setPage] = useState(1)
+    const ITEMS_PER_PAGE = 15
+
 
 
     const toggleFavorite = (recipe) => {
@@ -35,18 +38,24 @@ function Home() {
 
 
     useEffect(() => {
+        setPage(1)
+    }, [search, cuisine, diet])
+
+
+    useEffect(() => {
         const timeout = setTimeout(() => {
             const fetchRecipes = async () => {
                 try {
                     setLoading(true)
                     const API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY
+                    const offset = (page - 1) * ITEMS_PER_PAGE
 
                     const response = await fetch(
-                        `https://api.spoonacular.com/recipes/complexSearch?number=10&query=${search}&cuisine=${cuisine}&diet=${diet}&apiKey=${API_KEY}`
+                        `https://api.spoonacular.com/recipes/complexSearch?number=${ITEMS_PER_PAGE}&offset=${offset}&query=${search}&cuisine=${cuisine}&diet=${diet}&apiKey=${API_KEY}`
                     )
 
                     const data = await response.json()
-                    setRecipes(data.results)
+                    setRecipes(data.results || [])
                 } catch (error) {
                     console.error('Error fetching recipes:', error)
                 } finally {
@@ -58,41 +67,51 @@ function Home() {
         }, 400)
 
         return () => clearTimeout(timeout)
-    }, [search, cuisine, diet])
+    }, [search, cuisine, diet, page])
+
 
 
 
 
     return (
-        <div>
-            <h2>Recipes</h2>
+        <div class="page">
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>elevate your culinary experience</h1>
+                    <p>Search, filter, and save your favorite meals</p>
+                </div>
+            </section>
 
-            <div className="filters">
-                <input
-                    type="text"
-                    placeholder="Search recipes..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
+            <div class="header">
+                <h2>SEARCH</h2>
 
-                <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
-                    <option value="">All Cuisines</option>
-                    <option value="italian">Italian</option>
-                    <option value="mexican">Mexican</option>
-                    <option value="french">French</option>
-                    <option value="chinese">Chinese</option>
-                    <option value="indian">Indian</option>
-                </select>
+                <div class="filters">
+                    <input
+                        type="text"
+                        placeholder="Search recipes..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
 
-                <select value={diet} onChange={(e) => setDiet(e.target.value)}>
-                    <option value="">All Diets</option>
-                    <option value="vegan">Vegan</option>
-                    <option value="vegetarian">Vegetarian</option>
-                    <option value="gluten free">Gluten Free</option>
-                </select>
+                    <select value={cuisine} onChange={(e) => setCuisine(e.target.value)}>
+                        <option value="">All Cuisines</option>
+                        <option value="italian">Italian</option>
+                        <option value="mexican">Mexican</option>
+                        <option value="french">French</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="indian">Indian</option>
+                    </select>
+
+                    <select value={diet} onChange={(e) => setDiet(e.target.value)}>
+                        <option value="">All Diets</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="gluten free">Gluten Free</option>
+                    </select>
+                </div>
             </div>
 
-            <div className="recipe-list">
+            <div class="recipe-list">
                 {loading && <p>Loading recipes...</p>}
 
                 {!loading &&
@@ -104,6 +123,18 @@ function Home() {
                             isFavorite={favorites.some((f) => f.id === recipe.id)}
                         />
                     ))}
+            </div>
+
+            <div class="pagination">
+                {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                        key={num}
+                        class={page === num ? 'active' : ''}
+                        onClick={() => setPage(num)}
+                    >
+                        {num}
+                    </button>
+                ))}
             </div>
         </div>
     )
