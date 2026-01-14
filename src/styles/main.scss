@@ -1,3 +1,5 @@
+
+
 .page {
   max-width: 1200px;
   margin: 0 auto;
@@ -8,7 +10,8 @@
 
 .navbar {
   width: 100%;
-  background: #fff;
+  background: transparent;
+  position: relative;
 }
 
 .navbar-inner {
@@ -53,6 +56,51 @@
   width: auto;
   display: block;
 }
+
+
+
+
+.hero {
+  position: relative;
+  width: 100%;
+  min-height: 80vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+
+}
+
+.hero-content {
+  font-size: 50px;
+  line-height: 0.95;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 1rem;
+  position: absolute;
+  left: 6%;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 700px;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+}
+
+
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+  }
+}
+
 
 
 

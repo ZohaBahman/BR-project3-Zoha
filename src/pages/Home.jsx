@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import RecipeCard from '../components/RecipeCard'
+import heroImage from '../assets/hero-image.jpg'
 
 
 function Home() {
@@ -75,12 +76,15 @@ function Home() {
 
     return (
         <div class="page">
-            <section class="hero">
+            <section class="hero"
+                style={{ backgroundImage: `url(${heroImage})` }}
+            >
                 <div class="hero-content">
-                    <h1>elevate your culinary experience</h1>
+                    <h1>elevate your culinary <br /> experience</h1>
                     <p>Search, filter, and save your favorite meals</p>
                 </div>
             </section>
+
 
             <div class="header">
                 <h2>SEARCH</h2>
