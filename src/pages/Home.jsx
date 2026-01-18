@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import RecipeCard from '../components/RecipeCard'
 import heroImage from '../assets/hero-image.jpg'
 
-
 function Home() {
     const [recipes, setRecipes] = useState([])
     const [loading, setLoading] = useState(true)
@@ -19,7 +18,9 @@ function Home() {
     const [page, setPage] = useState(1)
     const ITEMS_PER_PAGE = 15
 
+    const [totalResults, setTotalResults] = useState(0)
 
+    const totalPages = Math.ceil(totalResults / ITEMS_PER_PAGE)
 
     const toggleFavorite = (recipe) => {
         const exists = favorites.find((item) => item.id === recipe.id)
@@ -35,13 +36,9 @@ function Home() {
         localStorage.setItem('favorites', JSON.stringify(updated))
     }
 
-
-
-
     useEffect(() => {
         setPage(1)
     }, [search, cuisine, diet])
-
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -57,6 +54,7 @@ function Home() {
 
                     const data = await response.json()
                     setRecipes(data.results || [])
+                    setTotalResults(data.totalResults || 0)
                 } catch (error) {
                     console.error('Error fetching recipes:', error)
                 } finally {
@@ -70,26 +68,24 @@ function Home() {
         return () => clearTimeout(timeout)
     }, [search, cuisine, diet, page])
 
-
-
-
-
     return (
-        <div class="page">
-            <section class="hero"
+        <div className="page">
+            <section
+                className="hero"
                 style={{ backgroundImage: `url(${heroImage})` }}
             >
-                <div class="hero-content">
-                    <h1>elevate your culinary <br /> experience</h1>
+                <div className="hero-content">
+                    <h1>
+                        elevate your culinary <br /> experience
+                    </h1>
                     <p>Search, filter, and save your favorite meals</p>
                 </div>
             </section>
 
-
-            <div class="header">
+            <div className="header">
                 <h2>SEARCH</h2>
 
-                <div class="filters">
+                <div className="filters">
                     <input
                         type="text"
                         placeholder="Search recipes..."
@@ -115,7 +111,7 @@ function Home() {
                 </div>
             </div>
 
-            <div class="recipe-list">
+            <div className="recipe-list">
                 {loading && <p>Loading recipes...</p>}
 
                 {!loading &&
@@ -129,17 +125,60 @@ function Home() {
                     ))}
             </div>
 
-            <div class="pagination">
-                {[1, 2, 3, 4, 5].map((num) => (
+            <div className="pagination">
+                <button
+                    disabled={page === 1}
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                    &lt;
+                </button>
+
+
+                <button
+                    className={page === 1 ? 'active' : ''}
+                    onClick={() => setPage(1)}
+                >
+                    1
+                </button>
+
+
+                {page > 3 && <span className="dots">...</span>}
+
+
+                {Array.from({ length: 3 }, (_, i) => page - 1 + i)
+                    .filter((p) => p > 1 && p < totalPages)
+                    .map((num) => (
+                        <button
+                            key={num}
+                            className={page === num ? 'active' : ''}
+                            onClick={() => setPage(num)}
+                        >
+                            {num}
+                        </button>
+                    ))}
+
+
+                {page < totalPages - 2 && <span className="dots">...</span>}
+
+
+                {totalPages > 1 && (
                     <button
-                        key={num}
-                        class={page === num ? 'active' : ''}
-                        onClick={() => setPage(num)}
+                        className={page === totalPages ? 'active' : ''}
+                        onClick={() => setPage(totalPages)}
                     >
-                        {num}
+                        {totalPages}
                     </button>
-                ))}
+                )}
+
+
+                <button
+                    disabled={page === totalPages}
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                    &gt;
+                </button>
             </div>
+
         </div>
     )
 }
