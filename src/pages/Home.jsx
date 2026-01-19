@@ -49,8 +49,10 @@ function Home() {
                     const offset = (page - 1) * ITEMS_PER_PAGE
 
                     const response = await fetch(
-                        `https://api.spoonacular.com/recipes/complexSearch?number=${ITEMS_PER_PAGE}&offset=${offset}&query=${search}&cuisine=${cuisine}&diet=${diet}&apiKey=${API_KEY}`
+                        `https://api.spoonacular.com/recipes/complexSearch?number=${ITEMS_PER_PAGE}&offset=${offset}&query=${search}&cuisine=${cuisine}&diet=${diet}&addRecipeInformation=true&apiKey=${API_KEY}`
                     )
+
+
 
                     const data = await response.json()
                     setRecipes(data.results || [])
@@ -72,7 +74,7 @@ function Home() {
         <div className="page">
             <section
                 className="hero"
-                style={{ backgroundImage: `url(${heroImage})` }}
+
             >
                 <div className="hero-content">
                     <h1>

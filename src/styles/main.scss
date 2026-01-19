@@ -1,4 +1,7 @@
-
+body {
+  margin: 0;
+  padding: 0;
+}
 
 .page {
   max-width: 1200px;
@@ -6,6 +9,9 @@
   padding: 2rem;
 }
 
+.page_wrapper {
+  
+}
 
 
 .navbar {
@@ -42,7 +48,7 @@
     position: relative;
 
     &:hover {
-      color: #e74c3c;
+      color: #79df60;
     }
 
     &:hover::after {
@@ -65,40 +71,98 @@
   width: 100%;
   min-height: 80vh;
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
 
+  background-image: url(../assets/hero-image.jpg);
+  background-repeat: no-repeat;
+  background-size: 90% auto;
+  background-position: 170% 30%;
+
+
+
 }
 
+
 .hero-content {
-  font-size: 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: capitalize;
+  color: #000;
+  // margin-bottom: 0.5rem;
+  position: absolute;
+  top: 60%;
+  transform: translateY(-50%);
+  max-width: 42rem;
+}
+
+.hero-content h1 {
+  font-size: clamp(2.2rem, 6vw, 5.1rem);
+
+  margin: 0;
   line-height: 0.95;
   font-weight: 800;
-  color: #000;
-  margin-bottom: 1rem;
-  position: absolute;
-  left: 6%;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 700px;
 }
 
 .hero-content p {
-  font-size: 1.5rem;
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+}
+
+
+@media (max-width: 768px) {
+  .hero {
+    background-size: 90% auto;
+    background-position: 100% 20%;
+  }
+
+  .hero-content {
+    left: 0%;
+  }
 }
 
 
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 32px;
+  .hero {
+    min-height: 60vh;
+    background-size: 100% auto;
   }
 
-  .hero-subtitle {
-    font-size: 0.95rem;
+  .hero-content {
+    // left: 1.5rem;
+    right: 1.5rem;
   }
 }
+
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 70vh;
+    background-size: 180% auto;
+    background-position: center 5%;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+  }
+
+  .hero-content {
+    position: relative;
+    transform: none;
+    margin-top: 6rem;
+    // padding: 0 1.25rem;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2rem, 9vw, 2.9rem);
+    line-height: 1.05;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+}
+
 
 
 
@@ -149,10 +213,13 @@
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -168,18 +235,49 @@
     width: 100%;
     height: 200px;
     object-fit: cover;
+    flex-shrink: 0;
   }
 
   h3 {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.5rem;
-    line-height: 1.3;
-    padding: 0.6rem 0.7rem;
+    font-size: 1.3rem;
+    line-height: 1.35;
+    padding: 2rem 1rem 0.5rem;
     margin: 0;
     color: #222;
-    flex-grow: 1;
+    // flex-grow: 1;
+    
+    display: -webkit-box;
+    // -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1em * 3);
+    text-overflow: ellipsis;
+  }
+
+  .card-desc {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #666;
+    padding: 0 1rem 1.25rem;
+    margin: 0;
+    overflow: hidden;
+    text-align: left;
+
+    display: -webkit-box;
+    // -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    min-height: calc(1.5rem * 3);
+
   }
 }
+
+
+
 
 
 .fav-btn {
@@ -274,25 +372,21 @@
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 2rem 0;
+  margin-top: 5rem;
+  margin-bottom: 4rem;
 
   button {
     padding: 6px 10px;
     border-radius: 50%;
     border: none;
-    background: #fff;
+    background: transparent;
     cursor: pointer;
     transition: 0.2s;
 
     &.active {
       background: #79df60;
       color: #1c1c1c;
-      // border-color: #73cb5d;
       border-radius: 50%;
-    }
-
-    &:hover {
-      background: #b0eda0;
     }
   }
 }

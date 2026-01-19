@@ -19,7 +19,17 @@ function RecipeCard({ recipe, onToggleFavorite, isFavorite }) {
             <Link to={`/recipe/${recipe.id}`} className="card-link">
                 <img src={recipe.image} alt={recipe.title} />
                 <h3>{recipe.title}</h3>
+
+                {recipe.summary && (
+                    <p
+                        className="card-desc"
+                        dangerouslySetInnerHTML={{
+                            __html: recipe.summary.replace(/<[^>]+>/g, '').slice(0, 140) + '...'
+                        }}
+                    />
+                )}
             </Link>
+
         </div>
     )
 }
